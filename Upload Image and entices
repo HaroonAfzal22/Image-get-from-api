@@ -1,0 +1,37 @@
+  
+  // you can uplaod image with entities name,class,cgpa,etc
+  
+  
+  Future<void> uploadImageWithData() async {
+    try {
+      var stream = new http.ByteStream(image!.openRead());
+      stream.cast();
+
+      var length = await image!.length();
+
+      var uri = Uri.parse(myApi);
+
+      var request = http.MultipartRequest('POST', uri);
+
+      request.fields['category_name'] = 'Quran';             // here i am post name of category, you can add more by copy and paste.
+
+      var multiport = http.MultipartFile(
+        'image',
+        stream,
+        length,
+        filename: image!.path,
+        contentType: MediaType('Content-Type', 'multipart/form-data'),
+      );
+
+      request.files.add(multiport);
+
+      var response = await request.send();
+
+      print(response.statusCode);
+      response.statusCode == 200
+          ? print(' Data sucsessfully upload ')
+          : print(response.statusCode);
+    } catch (e) {
+      print(e);
+    }
+  }
